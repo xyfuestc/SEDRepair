@@ -49,6 +49,13 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+
+//设置执行字符集为utf8
+#if defined(_MSC_VER) && (_MSC_VER >= 1600)
+# pragma execution_character_set("utf-8")
+#endif
+
+
 #include "Example/zexample.h"
 
 void usage()
@@ -94,6 +101,8 @@ int main(int argc, char *argv[])
     printf("Unknown Vectorization\n");
 #endif
     printf("\n\n ********* Start zerasure *********\n\n");
+
+//    ZExample::single(argc,argv);
 
     if(strcmp(argv[1], "test_cost_weight") == 0)
         ZExample::test_cost_weight(argc,argv);

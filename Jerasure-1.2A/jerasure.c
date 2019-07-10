@@ -1250,6 +1250,53 @@ void jerasure_schedule_encode(int k, int m, int w, int **schedule,
     free(ptr_copy);
 }
 
+int **arr_trace(int k, int m, int w, int *bitmatrix){
+    int **operations;
+    int op;
+    int index, optodo, i, j;
+
+    operations = talloc(int *, k*m*w*w+1);
+    op = 0;
+    int cols = m*w;
+    int rows = k*w;
+
+    index = 0;
+    for (i = 0; i < cols; i++) {
+        optodo = 0;
+        if( i!=0 && i%w == 0 ) printf("\n");
+        //查看某一行的数据，
+        for (j = 0; j < rows; j++) {
+            //如果为1，则optodo=1，operations[op][4]=1的数量=一行中1的数量+1；op数量=为1数量
+            if( j!=0 && j%w == 0 ){
+                printf(" ");
+            }
+            if (bitmatrix[j*cols+i]) {
+                operations[op] = talloc(int, 5);
+                operations[op][4] = optodo;
+                operations[op][0] = j/w;
+                operations[op][1] = j%w;
+                operations[op][2] = k+i/w;
+                operations[op][3] = i%w;
+                optodo = 1;
+                op++;
+
+                printf("1");
+
+            }else{
+                printf("0");
+            }
+
+        }
+        printf("\n");
+    }
+    printf("\n");
+
+    operations[op] = talloc(int, 5);
+    operations[op][0] = -1;
+    return operations;
+}
+
+/*将bitmatrix中的1的数量，转换为操作operations[op][5]*/
 int **jerasure_dumb_bitmatrix_to_schedule(int k, int m, int w, int *bitmatrix)
 {
     int **operations;
@@ -1262,7 +1309,9 @@ int **jerasure_dumb_bitmatrix_to_schedule(int k, int m, int w, int *bitmatrix)
     index = 0;
     for (i = 0; i < m*w; i++) {
         optodo = 0;
+        //查看某一行的数据，
         for (j = 0; j < k*w; j++) {
+            //如果为1，则optodo=1，operations[op][4]=1的数量=一行中1的数量+1；op数量=为1数量
             if (bitmatrix[index]) {
                 operations[op] = talloc(int, 5);
                 operations[op][4] = optodo;

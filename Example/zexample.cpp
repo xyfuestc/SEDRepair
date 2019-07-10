@@ -82,8 +82,13 @@ void ZExample::single(int argc, char *argv[])
     if(argc == 4)
     {
         int K,M,W,costf,stra;
+        printf("input 输入K,M,W : \n");
         cin >> K >> M >> W;
+//        printf("input costf[0-2] : \n");
         costf = atoi(argv[2]);
+//        cin >> costf;
+//        printf("input strategy[0-7] : \n");
+//        cin >> stra;
         stra = atoi(argv[3]);
         vector<int> arr(K+M,0);
         for(int i = 0;i<K+M;i++)

@@ -45,3 +45,5 @@ HEADERS += \
 DISTFILES += \
     README.md \
     mfile
+
+INCLUDEPATH += /usr/local/include

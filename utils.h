@@ -47,7 +47,7 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 #ifndef UTILS_H
 #define UTILS_H
-
+#include <stdlib.h>
 #include <x86intrin.h>
 #include <vector>
 

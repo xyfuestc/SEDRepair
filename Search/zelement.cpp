@@ -66,7 +66,7 @@ int ZElement::W = 0;
 int ZElement::cost_func = 0;
 int ZElement::strategy = 0;
 bool ZElement::isInited = false;
-
+/* 如果sch[idx][2] == 1|3|5，xor++ */
 long long schedule_weight_3(vector<int*> &sch)
 {
     long long ret = 0;
@@ -92,11 +92,12 @@ long long schedule_weight_3(vector<int*> &sch)
     }
     return ret;
 }
-
+/*如果sch[idx][4] == 1 ，xor++；*/
 long long schedule_len_5(int** sch)
 {
     long long ret = 0;
     int idx = 0;
+    int cpCount = 0;
     while(sch[idx][0] != -1)
     {
         switch(ZElement::cost_func)
@@ -110,19 +111,23 @@ long long schedule_len_5(int** sch)
         case ZElement::COST_WEIGHTED:
             if(sch[idx][4] == 1) // add weight to xor and memcpy
                 ret += ZElement::xor_weight;
-            else
+            else{
+                cpCount++;
                 ret += ZElement::cpy_weight;
+            }
+
             break;
         }
         idx ++;
     }
+    printf("the schedule cpCount = %d\n",cpCount);
     return ret;
 }
 
 ZElement::ZElement(int *p)
 {
     assert(isInited);
-    array = vector<int>(p,p+K+M);
+    array = vector<int>(p,p+K+M); //vector初值为p+K+M
 }
 
 ZElement::ZElement(vector<int> p)
@@ -144,6 +149,7 @@ void ZElement::init(int tK, int tM, int tW, int tcost, int tstrategy)
 long long ZElement::value()
 {
     long long xor0_natual_dumb;
+    long long my_xor0_natual_dumb;
     long long xor1_natual_smart;
     long long xor2_natual_grouping_unweighted;
     long long xor3_natual_grouping_weighted;
@@ -156,19 +162,35 @@ long long ZElement::value()
     int *matrix;
     int *bitmatrix;
     int **schedule;
+    int **myschedule;
+    //X:array[K----K+m];Y:array[0----K]
     matrix = cauchy_xy_coding_matrix(K,M,W,array.data()+K,array.data());
+    FILE *fp = NULL;
+    if((fp = fopen("/Users/flyln/Documents/workplace/606/git/build-zerasure-Desktop_Qt_5_8_0_clang_64bit-Debug/result.txt","a+")) == NULL){
+        printf("打开文件失败!\n");
+        exit(-1);
+    }
 
     switch(strategy)
     {
     case 0:
+
         // natual dumb
         bitmatrix = jerasure_matrix_to_bitmatrix(K,M,W,matrix);
+        jerasure_print_bitmatrix(bitmatrix,K*W,M*W,W);
+        myschedule = arr_trace(K,M,W,bitmatrix);
         schedule = jerasure_dumb_bitmatrix_to_schedule(K,M,W,bitmatrix);
-        xor0_natual_dumb = schedule_len_5(schedule);
-        free2dSchedule5(schedule);
+        xor0_natual_dumb = schedule_len_5(schedule); //计算XOR的cost
+        my_xor0_natual_dumb = schedule_len_5(schedule); //计算XOR的cost
+
+        if(xor0_natual_dumb != my_xor0_natual_dumb) fprintf(fp,"组(%d,%d,%d)结果不同：原cost：%d,现在cost：%d\n",
+                                                           K,M,W,xor0_natual_dumb,my_xor0_natual_dumb);
+        free2dSchedule5(schedule); 
         free(bitmatrix);
         free(matrix);
         v = xor0_natual_dumb;
+        fclose(fp);
+//        free(fp);
         return xor0_natual_dumb;
     case 1:
         // natual smart
@@ -269,12 +291,20 @@ void ZElement::test_cost_weight(int size, int loops)
         posix_memalign((void**)&dat, 32, size);
         posix_memalign((void**)&dat1, 32, size);
         posix_memalign((void**)&dat2, 32, size);
+
+        /*
+            * struct  timeval{
+            *  long  tv_sec;/*秒*
+            *  long  tv_usec;/*微妙*
+            * }；
+        */
         struct timeval t0,t1;
 
         gettimeofday(&t0,NULL);
         for(int j = 0;j<loops;j++)
             memcpy(dat1,dat,size);
         gettimeofday(&t1,NULL);
+
         cpy_weight += diff_us(t0,t1);
 
         gettimeofday(&t0,NULL);

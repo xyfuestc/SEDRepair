@@ -45,11 +45,13 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
 WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
+
 #include "utils.h"
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
 
+/*计算end-start的毫秒数（四舍五入）*/
 long long diff_ms(struct timeval start, struct timeval end)
 {
     long long mtime, seconds, useconds;
@@ -60,7 +62,7 @@ long long diff_ms(struct timeval start, struct timeval end)
     mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
     return mtime;
 }
-
+/*计算end-start的微秒数*/
 long long diff_us(struct timeval start, struct timeval end)
 {
     long long mtime, seconds, useconds;
@@ -86,6 +88,7 @@ void fast_xor(char* r1, char* r2, char* r3, int size)
         b3 = (__m128i *)(r3+j*vec_width);
         *b3 = _mm_xor_si128(*b1,*b2);
     }
+//    printf("vec128\n");
 #elif VEC256
     int vec_width = 32;
     int loops = size / vec_width;
@@ -98,6 +101,7 @@ void fast_xor(char* r1, char* r2, char* r3, int size)
         e3 = (__m256i *)(r3+j*vec_width);
         *e3 = _mm256_xor_si256(*e1,*e2);
     }
+//    printf("vec256\n");
 #else
       long *l1;
       long *l2;
@@ -117,6 +121,7 @@ void fast_xor(char* r1, char* r2, char* r3, int size)
         l2++;
         l3++;
       }
+//      printf("no vec\n");
 #endif
 }
 
@@ -142,12 +147,16 @@ void free2dSchedule5(int **p)
 char** malloc2d(int row, int col)
 {
     printf("Malloc... 2d %d x %d\n",row, col);
-    char ** ret = (char**) aligned_alloc(32,row * sizeof(char*));
-
+    char ** ret = NULL;
+//    char ** ret = (char**) aligned_alloc(32,row * sizeof(char*));
+//    char ** ret = (char**)malloc(row * sizeof(char*));
+    posix_memalign((void**)ret, 32, row * sizeof(char*));
     assert(ret != NULL);
     for(int i = 0;i<row;i++)
     {
-        ret[i] = (char*)aligned_alloc(32,col);
+        posix_memalign((void**)ret, 32, col);
+//        ret[i] = (char*)aligned_alloc(32,col);
+//        ret[i] = (char*)malloc(col);
         assert(ret[i] != NULL);
         memset(ret[i], 0, col);
     }

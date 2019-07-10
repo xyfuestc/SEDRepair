@@ -133,6 +133,8 @@ int ***jerasure_generate_schedule_cache(int k, int m, int w, int *bitmatrix, int
 
 void jerasure_free_schedule(int **schedule);
 void jerasure_free_schedule_cache(int k, int m, int ***cache);
+//array 测试 ,mady by Sean
+int **arr_trace(int k, int m, int w, int *bitmatrix);
 
 
 /* ------------------------------------------------------------ */

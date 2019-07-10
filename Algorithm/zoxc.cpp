@@ -59,13 +59,14 @@ using namespace std;
 #define E 1000
 
 #include <cassert>
-
+/*width表示节点数量，*/
 ZOXC::ZOXC(int width, int height)
 {
     n_XOR = 0;
     m_width = width;
     m_height = height;
     g = new zgraph;
+    // 初始化顶点
     for(int i = 0;i<width;i++)
     {
         znode *n = new znode;
@@ -73,7 +74,7 @@ ZOXC::ZOXC(int width, int height)
         n->degree = 0;
         g->all_nodes.push_back(n);
     }
-
+    //  邻接矩阵上三角赋初值，weight=0
     for(int i = 0;i<width-1;i++)
     {
         for(int j = i+1;j<width;j++)

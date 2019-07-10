@@ -92,7 +92,7 @@ public:
                 return *it;
         return 0;
     }
-
+    //设置节点的度数：连接该点的边weight>0就+1
     void set_node_degree()
     {
         for(vector<znode*>::iterator it = all_nodes.begin();it != all_nodes.end();it++)
