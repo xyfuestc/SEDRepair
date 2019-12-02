@@ -49,6 +49,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #define ZELEMENT_H
 
 #include <vector>
+#include <queue>
 #include <stdlib.h>
 
 using namespace std;
@@ -66,6 +67,27 @@ public:
     static int cpy_weight;
     static int xor_weight;
 
+    static int _chunk_size;
+    static int _packet_size;
+
+    static int _network_bandwidth;
+    static int _disk_bandwidth;
+    static int _chunk_num;
+    //单个packet的ec传输时间
+    static double ec_transmit_pkt_time;
+    static double ec_transmit_pkt_time2;
+    static double dir_transit_pkt_time;
+    //_disk_bandwidth上下行相同？读取和写入时间相同？
+    static double rd_pkt_time;
+    static double wr_pkt_time;
+    static double repair_chunk_time;
+    static double migrate_chunk_time;
+    static int migrateTotalCnt;
+    //总耗时对比
+    static double totalERTime;
+    static double totalERTempTime;
+    static double totalSeanTime;
+
     // must be called before create any object
     static void init(int tK, int tM, int tW, int tcost, int tstrategy);
 
@@ -77,6 +99,21 @@ public:
     static bool isInited; // ensure init() has been called
 
     vector<int> array;
+
+    //结果文件(result.txt)句柄
+    static FILE *fp;
+
+    int calMigrateChunkNum(int num_repair_chunk);
+    int calMigrateChunkNum2(int num_repair_chunk);
+    int doRepair(queue<int> & repairMatrix, queue<int> & migrateMatrix, double limitTime);
+    int doRepairBeforeNewDisk(int U, int P, double limitTime);
+    int doRepairBeforeNewDiskOnlyER(int U);
+    double doRepairAfterNewDiskOnlyER(int U);
+    int doRepairAfterNewDisk(int U, int P,int schedule);
+
+    int doRepairBeforeConcurrent(int U, int P, double limitTime);
+    int doRepairAfterConcurrent(int U, int P,int schedule);
+    int doRepairBeforeOnlyERTemp(int U);
 };
 
 #endif // ZELEMENT_H

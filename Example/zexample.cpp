@@ -55,6 +55,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "../Search/zgenetic.h"
 #include "../Algorithm/zcauchy.h"
 #include "../Algorithm/zgrouping.h"
+#include "util.h"
 using namespace std;
 
 ZExample::ZExample()

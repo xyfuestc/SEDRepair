@@ -174,3 +174,9 @@ void free2d(char** &p, int len)
     free(p);
     p = NULL;
 }
+
+int Random(int a,int b)
+{
+    srand((unsigned)time(NULL));
+    return (rand() % (b-a+1)) + a;
+}

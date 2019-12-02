@@ -1,0 +1,10 @@
+#!/bin/sh
+fileName=$1
+n=1
+while read line
+do 
+
+    echo "File No. $n : ${line}"
+    ${line} | ./zerasure single 2 0
+    n=$((n+1))
+done < $fileName

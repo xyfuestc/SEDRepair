@@ -1403,7 +1403,9 @@ int **jerasure_smart_bitmatrix_to_schedule(int k, int m, int w, int *bitmatrix)
                     op++;
                 }
             }
-        } else {
+        }
+        //没有else的可能，因为from[i]==-1,i从0->m*w-1
+        else {
             operations[op] = talloc(int, 5);
             operations[op][4] = 0;
             operations[op][0] = k+from[row]/w;
@@ -1425,6 +1427,7 @@ int **jerasure_smart_bitmatrix_to_schedule(int k, int m, int w, int *bitmatrix)
                 }
             }
         }
+
         bestdiff = k*w+1;
         for (i = top; i != -1; i = flink[i]) {
             no = 1;

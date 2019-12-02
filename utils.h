@@ -65,4 +65,7 @@ void free2dSchedule5(int **p);
 char** malloc2d(int row, int col);
 void free2d(char** &p, int len);
 
+//产生[a,b]之间的随机数
+int Random(int a,int b);
+
 #endif // UTILS_H
