@@ -65,5 +65,3 @@ If you want to change the factor, like the size of packet or time of T1, you sho
 - Jerasure-1.2A/
     - Partial source code ported from Jerasure-1.2A, minor modification for compile purpose.
 - utils: Some utility functions such as memory management and timing.
-
-1. ​
