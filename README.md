@@ -1,10 +1,10 @@
-# 2SPFFR
-2SPFFR is the source code repository for the paper:
+# SEDRepair
+SEDRepair is the source code repository for the paper:
 
-**Two-Stage Parity Flowable Fast Repair in Erasure Coding**  
-Yifei Xiao, Shijie Zhou, Chunjiang Wu, UESTC, China
+**Sector Error-Oriented Durability-Aware Fast Repair in Erasure-Coded Cloud Storage Systems**  
+Yifei Xiao, Shijie Zhou, Linpeng Zhong, UESTC, China
 
-2SPFFR is based on Zerasure(<https://github.com/zhoutl1106/zerasure>).
+SEDRepair is based on Zerasure(<https://github.com/zhoutl1106/zerasure>).
 
 # Usage
 ## Software reference
@@ -59,7 +59,7 @@ If you want to change the factor, like the size of packet or time of T1, you sho
 
 ## Code structure
 - Algorithm/
-    - 2SPFFR: implement of 2SPFFR
+    - SEDRepair: implement of SEDRepair
     - ERT:reconstruction-only, which is the conventional method based on RS codes, ERT only use reconstruction operations
     - ER: ER preserves recovered data in the parity nodes in BN, which means ER is support for data durability 
 - Jerasure-1.2A/
